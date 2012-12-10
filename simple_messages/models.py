@@ -24,6 +24,7 @@ class SimpleMessage(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     expires = models.DateTimeField(null=True, blank=True)
+    n_seen = models.IntegerField(default=0)
 
     def as_message(self):
         return Message(self.level, self.message, extra_tags=None)
