@@ -8,15 +8,6 @@ class ModelStorage(BaseStorage):
     """
     Stores messages in the model
     """
-    #session_key = '_messages'
-    '''
-    def __init__(self, request, *args, **kwargs):
-        assert hasattr(request, 'session'), "The session-based temporary "\
-            "message storage requires session middleware to be installed, "\
-            "and come before the message middleware in the "\
-            "MIDDLEWARE_CLASSES list."
-        super(ModelStorage, self).__init__(request, *args, **kwargs)
-    '''
     def _get(self, *args, **kwargs):
         if not self.request.user.is_authenticated():
             return [], False
@@ -32,3 +23,7 @@ class ModelStorage(BaseStorage):
         for message in messages:
             add_message(self.request.user, message.message, level=message.level)
         return []
+
+    def update(self, response):
+        self._prepare_messages(self._queued_messages)
+        return self._store(self._queued_messages, response)
